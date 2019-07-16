@@ -63,6 +63,34 @@ function getDissemination() {
               year: "numeric"
             }); // maybe new variable name?? .split(" ").join("-")
 
+            // Day variable
+            day_JSON = new Date(dissJSONparsed.date).toLocaleDateString(
+              "en-GB",
+              {
+                day: "numeric"
+                //month: "short",
+                //year: "numeric"
+              }
+            );
+            // Month variable
+            month_JSON = new Date(dissJSONparsed.date).toLocaleDateString(
+              "en-GB",
+              {
+                //day: "numeric"
+                month: "short"
+                //year: "numeric"
+              }
+            );
+            // year variable
+            year_JSON = new Date(dissJSONparsed.date).toLocaleDateString(
+              "en-GB",
+              {
+                //day: "numeric"
+                //month: "short"
+                year: "numeric"
+              }
+            );
+
             console.log(
               "This should be date! AFTER: ",
               typeof dissJSONparsed.date,
@@ -94,6 +122,9 @@ function getDissemination() {
 
            <td>${dissJSONparsed.name}</td>
            <td>${dissJSONparsed.date}</td>
+           <td>${day_JSON}</td>
+           <td>${month_JSON}</td>
+           <td>${year_JSON}</td>
            <!--  <td>${dissJSONparsed.timePeriodOffset}</td> -->
            <td>${dissJSONparsed.timePeriod}</td>
            <!--  <td>${dissJSONparsed.isPostponed}</td> -->
