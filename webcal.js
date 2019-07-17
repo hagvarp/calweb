@@ -11,6 +11,7 @@ let dDate = new Date();
 let sDate = new Date();
 let disseminationParsed;
 let statisticalParsed;
+let apiData;
 
 document.getElementById("getDissemination");
 //.addEventListener("click", getDissemination);
@@ -21,6 +22,7 @@ document.getElementById("getDissemination");
 
 function getDissemination() {
   console.log("Hey getDissemination() works!");
+
   fetch("https://kalendari.hagstova.fo/api/Dissemination")
     .then(res => res.json())
     .then(disseminationData => {
@@ -148,34 +150,57 @@ function getDissemination() {
 
 document.getElementById("getStatisticalPublication");
 // .addEventListener("click", getStatisticalPublication);
-function getStatisticalPublication() {
-  fetch("https://kalendari.hagstova.fo/api/StatisticalPublication")
-    .then(res => res.json()) //console.log(statisticalPublicationData));
-    .then(statisticalPublicationData => {
-      let outputStatisticalP = '<h2 class="mb-4">Statistical Publication</h2>';
-      statisticalPublicationData.forEach(function(statisticalPublication) {
-        outputStatisticalP += `
-          <div>
-         <table class="table table-striped">
-          <thead>
-      <tr>
-      <th>Id:</th>
-      <th>Name:</th>
-      </tr>
-      </thead>
-      <tbody></tbody>
-      <tr>
-        <td>${statisticalPublication.id}</td>
-        <td>${statisticalPublication.name}</td>
 
-      </tr>
-      </tbody>
-      </table>
-          </div>`;
-      });
+function getStatisticalPublication() {
+  console.log("Hey getStatisticalPublication() works!");
+  fetch("https://kalendari.hagstova.fo/api/StatisticalPublication")
+    .then(res => res.json())
+    .then(statisticalPublicationData => {
+      let outputStatisticalP =
+        '<select id="mySelect" onChange="onChangeFunction()" type="search" class="select-table-filter" data-table="order-table">';
+      // change to stringify and parse
+      let statArray = ([] = statisticalPublicationData);
+      // statisticalPublicationData.forEach(function(dissemination) {
+
+      for (let i = 0; i < statArray.length; i++) {
+        statJSONstring = JSON.stringify(statArray[i]);
+
+        statJSONparsed = JSON.parse(statJSONstring);
+        statisticalParsed = statJSONparsed;
+
+        outputStatisticalP += `
+
+
+        <option value="">${statJSONparsed.name}</option>
+
+
+     `;
+      }
+      outputStatisticalP += "</select>";
+
+      console.log("This is statJSONparsed", statJSONparsed);
+
       document.getElementById(
         "outputStatisticalP"
       ).innerHTML = outputStatisticalP;
     });
+
+  getDissemination();
 }
+
+//getDissemination();
+getStatisticalPublication();
+
+function onChangeFunction() {
+  var x = document.getElementById("mySelect").value;
+
+  console.log(x);
+
+  console.log("You selected: " + x);
+  // document.getElementById("demo").innerHTML = "You selected: " + x;
+}
+
+var f = document.getElementById("mySelect").value;
+console.log(f);
+
 getDissemination();
