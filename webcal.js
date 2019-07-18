@@ -1,10 +1,3 @@
-try {
-  var moment = require("moment");
-  console.log("Moment works!: ", moment());
-} catch (err) {
-  console.log("This is the MOMENT error!", err);
-}
-
 // const dateformat = require("dateformat"); // not used.
 let dateStr;
 let dDate = new Date();
@@ -21,12 +14,11 @@ document.getElementById("getDissemination");
 //   "<ol><li>poop</li></ol>";
 
 function getDissemination() {
-  console.log("Hey getDissemination() works!");
 
   fetch("https://kalendari.hagstova.fo/api/Dissemination")
     .then(res => res.json())
     .then(disseminationData => {
-      let outputDissemination = '<h2 class="mb-4">Dissemination</h2>';
+      let outputDissemination = '<ul id="myUL">';
       // change to stringify and parse
       let dissArray = ([] = disseminationData);
       // disseminationData.forEach(function(dissemination) {
@@ -104,42 +96,11 @@ function getDissemination() {
 
           outputDissemination += `
 
-          <div class="card">
-        <table class="table-striped">
-         <thead>
-     <tr>
-     <th>Name:</th>
-     <th>Date:</th>
-     <!-- <th>Time Period Offset:</th> -->
-     <th>Time Period:</th>
-     <!-- <th>Is Postponed:</th> -->
-     <!-- <th>Postponed To Date:</th> -->
-     <!-- <th>Responsible Person:</th> -->
-     <!-- <th>pxTables:</th> -->
-     <!-- <th>Statistical Publications Id:</th> -->
-     </tr>
-     </thead>
-     <tbody></tbody>
-     <tr>
-
-           <td>${dissJSONparsed.name}</td>
-           <td>${dissJSONparsed.date}</td>
-           <td>${day_JSON}</td>
-           <td>${month_JSON}</td>
-           <td>${year_JSON}</td>
-           <!--  <td>${dissJSONparsed.timePeriodOffset}</td> -->
-           <td>${dissJSONparsed.timePeriod}</td>
-           <!--  <td>${dissJSONparsed.isPostponed}</td> -->
-           <!--  <td>${dissJSONparsed.postponedToDate}</td> -->
-           <!--  <td>${dissJSONparsed.responsiblePerson}</td> -->
-           <!--  <td>${dissJSONparsed.pxTables}</td> -->
-           <!--  <td>${dissJSONparsed.statisticalPublicationId}</td> -->
-     </tr>
-     </tbody>
-     </table>
-         </div> `;
+          <li><a>${dissJSONparsed.statisticalPublicationId}</a>${dissJSONparsed.name}, ${day_JSON} ${month_JSON} ${year_JSON}</li>`;
         }
       }
+
+      outputDissemination += `</ul>`
 
       document.getElementById(
         "outputDissemination"
@@ -157,7 +118,7 @@ function getStatisticalPublication() {
     .then(res => res.json())
     .then(statisticalPublicationData => {
       let outputStatisticalP =
-        '<select id="mySelect" onChange="onChangeFunction()" type="search" class="select-table-filter" data-table="order-table">';
+        '<select id="mySelect" onChange="onChangeFunction()" onkeyup="filterFunction()" type="search" class="select-table-filter" data-table="order-table">';
       // change to stringify and parse
       let statArray = ([] = statisticalPublicationData);
       // statisticalPublicationData.forEach(function(dissemination) {
@@ -170,9 +131,7 @@ function getStatisticalPublication() {
 
         outputStatisticalP += `
 
-
-        <option value="">${statJSONparsed.name}</option>
-
+        <option value="${statJSONparsed.id}">${statJSONparsed.name}</option>
 
      `;
       }
@@ -190,17 +149,56 @@ function getStatisticalPublication() {
 
 //getDissemination();
 getStatisticalPublication();
+getDissemination();
+
+
 
 function onChangeFunction() {
-  var x = document.getElementById("mySelect").value;
 
-  console.log(x);
+  var e = document.getElementById("mySelect");
+  var strUser = e.options[e.selectedIndex].value;
+
+  var x = document.getElementById("mySelect").value;
 
   console.log("You selected: " + x);
   // document.getElementById("demo").innerHTML = "You selected: " + x;
+
+
+
+  console.log("prumpis");
+
+
+  var input, filter, ul, li, a, i, txtValue;
+  
+  input = document.getElementById("mySelect").value;
+
+  filter = x.toUpperCase();
+  
+  ul = document.getElementById("myUL");
+  
+  li = ul.getElementsByTagName("li");
+
+
+  
+  for (i = 0; i < li.length; i++) {
+      a = li[i].getElementsByTagName("a")[0];
+      
+    
+
+      txtValue = a.textContent || a.innerText;
+
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          li[i].style.display = "";
+      } else {
+          li[i].style.display = "none";
+      }
+  }
+
+
+
+
 }
 
-var f = document.getElementById("mySelect").value;
-console.log(f);
 
-getDissemination();
+
+function filterFunction() {}
