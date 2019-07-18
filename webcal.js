@@ -13,8 +13,91 @@ document.getElementById("getDissemination");
 // document.getElementById("getDissemination").innerHTML =
 //   "<ol><li>poop</li></ol>";
 
-function getDissemination() {
+function getTables(tableQuery) {
+  let url = "https://statbank.hagstova.fo/api/v1/fo/H2?query=" + tableQuery;
+  let tablesInJsonString;
+  let tableSortedArrTitle = [];
 
+  console.log(fetch(url));
+
+  fetch(url)
+    .then(res => res.json())
+    .then(tables => {
+      let tableArr = ([] = tables);
+      let outputTable = `<ol id="myOL">`;
+      // console.log("THIS IS THE OUTPUT!: ", outputTable);
+      // console.log("Tables: ", tables);
+      // console.log("TablesArr: ", tableArr);
+      // sort this array and make toString replace , with %20
+      for (let i = 0; i < tableArr.length; i++) {
+        tablesInJsonString = JSON.stringify(tableArr[i]);
+        console.log("This is JSON string", tablesInJsonString);
+        tablesInJsonParsed = JSON.parse(tablesInJsonString);
+        console.log("This is JSON parsed", tablesInJsonParsed);
+        console.log("This is title parsed: ", tablesInJsonParsed.title);
+        tableSortedArrTitle = tablesInJsonParsed.title;
+        console.log(
+          "This is the sorted array with title: ",
+          tableSortedArrTitle
+        );
+        let tableToString = [];
+
+        outputTable += `
+
+          <li><a>${tablesInJsonParsed.title}</a>${tablesInJsonParsed.title},
+
+          <ol>
+
+            <li>
+            ${tablesInJsonParsed.title}
+            </li>
+
+          </ol>
+
+          </li>`;
+        outputTable += `</ol>`;
+        // console.log(outputTable);
+      }
+      document.getElementById("outputTable").innerHTML = outputTable;
+    });
+  //console.log("svar:" + tableQuery);
+}
+
+// THIS IS NOT IN USE!!!!!!!!!!!!
+// function getTablesT() {
+//   fetch("https://kalendari.hagstova.fo/api/Dissemination")
+//     .then(res => res.json())
+//     .then(tablesData => {
+//       let tablesArray = ([] = tablesData);
+//       // console.log("This is tablesArray: ", tablesArray.pxTables);
+
+//       let tablesJSONstring;
+//       let tablesJSONparsed;
+//       let sortedTablesArray = [];
+//       let sortedTablesJSONstring;
+//       let sortedTablesJSONparsed;
+
+//       for (let i = 0; i < tablesArray.length; i++) {
+//         tablesJSONstring = JSON.stringify(tablesArray[i]);
+
+//         tablesJSONparsed = JSON.parse(tablesJSONstring);
+
+//         sortedTablesJSONparsed = tablesJSONparsed.pxTables;
+//         // console.log("This is sorted parsed: ", sortedTablesJSONparsed);
+//         sortedTablesArray = sortedTablesJSONparsed;
+//         // console.log("This is soredted", sortedTablesArray);
+//         // var items = sortedTablesArray.toString().split(",");
+
+//         // console.log(
+//         //   "This is tablesJSONparsed nr: ",
+//         //   i,
+//         //   tablesJSONparsed.pxTables
+//         // );
+//       }
+//     });
+// }
+
+function getDissemination() {
   fetch("https://kalendari.hagstova.fo/api/Dissemination")
     .then(res => res.json())
     .then(disseminationData => {
@@ -36,11 +119,11 @@ function getDissemination() {
 
           let dissJSONparsed = JSON.parse(dissJSONstring);
           disseminationParsed = dissJSONparsed; // to use later in dropdownlist
-          console.log(
-            "This is dissJSONparsed: ",
-            typeof dissJSONparsed,
-            dissJSONparsed
-          );
+          // console.log(
+          //   "This is dissJSONparsed: ",
+          //   typeof dissJSONparsed,
+          //   dissJSONparsed
+          // );
           // console.log(
           //   "This is date BEFORE: ",
           //   typeof dissJSONparsed.date,
@@ -85,24 +168,26 @@ function getDissemination() {
               }
             );
 
-            console.log(
-              "This should be date! AFTER: ",
-              typeof dissJSONparsed.date,
-              dissJSONparsed.date
-            );
+            // console.log(
+            //   "This should be date! AFTER: ",
+            //   typeof dissJSONparsed.date,
+            //   dissJSONparsed.date
+            // );
           } catch (err) {
-            console.log("This mean that date conversion failed. ", err);
+            console.log("This means that date conversion failed. ", err);
           }
 
           outputDissemination += `
 
-          <li><a>${dissJSONparsed.statisticalPublicationId}</a>${dissJSONparsed.name}, ${day_JSON} ${month_JSON} ${year_JSON}, ${dissJSONparsed.pxTables}
+          <li><a>${dissJSONparsed.statisticalPublicationId}</a>${
+            dissJSONparsed.name
+          }, ${day_JSON} ${month_JSON} ${year_JSON}, 
           
           
           <ol>
           
             <li>
-            talva
+            ${dissJSONparsed.pxTables}
             </li>
           
           </ol>
@@ -111,7 +196,7 @@ function getDissemination() {
         }
       }
 
-      outputDissemination += `</ul>`
+      outputDissemination += `</ul>`;
 
       document.getElementById(
         "outputDissemination"
@@ -148,7 +233,7 @@ function getStatisticalPublication() {
       }
       outputStatisticalP += "</select>";
 
-      console.log("This is statJSONparsed", statJSONparsed);
+      // console.log("This is statJSONparsed", statJSONparsed);
 
       document.getElementById(
         "outputStatisticalP"
@@ -158,14 +243,13 @@ function getStatisticalPublication() {
   getDissemination();
 }
 
+getTables("UH01010");
+
 //getDissemination();
 getStatisticalPublication();
 getDissemination();
 
-
-
 function onChangeFunction() {
-
   var e = document.getElementById("mySelect");
   var strUser = e.options[e.selectedIndex].value;
 
@@ -174,40 +258,28 @@ function onChangeFunction() {
   console.log("You selected: " + x);
   // document.getElementById("demo").innerHTML = "You selected: " + x;
 
-
-
   console.log("prumpis");
 
-
   var input, filter, ul, li, a, i, txtValue;
-  
+
   input = document.getElementById("mySelect").value;
 
   filter = x.toUpperCase();
-  
+
   ul = document.getElementById("myUL");
-  
+
   li = ul.getElementsByTagName("li");
 
-
-  
   for (i = 0; i < li.length; i++) {
-      a = li[i].getElementsByTagName("a")[0];
-      
-      txtValue = a.textContent || a.innerText;
+    a = li[i].getElementsByTagName("a")[0];
 
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          li[i].style.display = "";
-      } else {
-          li[i].style.display = "none";
-      }
+    txtValue = a.textContent || a.innerText;
+
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      li[i].style.display = "";
+    } else {
+      li[i].style.display = "none";
+    }
   }
-
-
-
-
 }
-
-
-
 function filterFunction() {}
