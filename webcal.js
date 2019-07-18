@@ -96,7 +96,18 @@ function getDissemination() {
 
           outputDissemination += `
 
-          <li><a>${dissJSONparsed.statisticalPublicationId}</a>${dissJSONparsed.name}, ${day_JSON} ${month_JSON} ${year_JSON}</li>`;
+          <li><a>${dissJSONparsed.statisticalPublicationId}</a>${dissJSONparsed.name}, ${day_JSON} ${month_JSON} ${year_JSON}, ${dissJSONparsed.pxTables}
+          
+          
+          <ol>
+          
+            <li>
+            talva
+            </li>
+          
+          </ol>
+
+          </li>`;
         }
       }
 
@@ -183,8 +194,6 @@ function onChangeFunction() {
   for (i = 0; i < li.length; i++) {
       a = li[i].getElementsByTagName("a")[0];
       
-    
-
       txtValue = a.textContent || a.innerText;
 
       if (txtValue.toUpperCase().indexOf(filter) > -1) {
